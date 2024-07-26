@@ -13,6 +13,8 @@ import { useQuery } from '@tanstack/react-query'
 import DrawerComponent from '../DrawerComponent/DrawerComponent'
 import { useSelector } from 'react-redux'
 import ModalComponent from '../ModalComponent/ModalComponent'
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 const AdminProduct = () => {
@@ -444,6 +446,12 @@ const AdminProduct = () => {
       [e.target.name]: e.target.value
     })
   };
+  const handleOnChangeDescription = (e) => {
+    setStateProduct({
+      ...stateProduct,
+      ['description']: e
+    })
+  }
   const handleDetailsOnchange = (e) => {
     setStateDetailsProduct({
       ...stateDetailsProduct,
@@ -672,7 +680,7 @@ const AdminProduct = () => {
                 },
               ]}
             >
-              <InputAdminFormComponent value={stateProduct.description} onChange={handleOnchange} name="description" />
+              <ReactQuill value={stateProduct.description} onChange={handleOnChangeDescription} placeholder='...' />
             </Form.Item>
 
             <Form.Item
@@ -907,9 +915,9 @@ const AdminProduct = () => {
                 },
               ]}
             >
-              <InputAdminFormComponent value={stateDetailsProduct.description} onChange={handleDetailsOnchange} name="description" />
+              <ReactQuill value={stateProduct.description} onChange={handleOnChangeDescription} placeholder='...' />
             </Form.Item>
-
+            
             <Form.Item
               label="Số lượng tồn kho"
               name="countInStock"
