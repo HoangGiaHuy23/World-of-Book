@@ -12,6 +12,7 @@ import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from '../../components/LoadingComponent/Loading';
 import * as message from '../../components/Message/Message'
 import { removeOrderProduct } from '../../redux/slices/orderSlice'
+import * as ZalopayService from '../../services/ZalopayService'
 
 
 const CheckOutPage = () => {
@@ -150,6 +151,11 @@ const CheckOutPage = () => {
     const handleOK = () => {
         navigate('/order')
     }
+    const handleZalopay = async (data) => {
+        const res = await ZalopayService.payment(data.totalPrice, data._id)
+        const bill_id = res.app_trans_id
+        window.location.href = res.order_url
+    }
     useEffect(() => {
         if (isSuccess && dataMutation?.status === 'OK') {
           message.success()
@@ -159,7 +165,8 @@ const CheckOutPage = () => {
                 dispatch(removeOrderProduct({idProduct}))
             }
         })
-          handleOK()
+        handleZalopay(dataMutation.data)
+        handleOK()
         } else if (isError) {
           message.error()
         }
