@@ -10,6 +10,7 @@ import TrendPage from "../pages/TrendPage/TrendPage";
 import AdminPage from "../pages/AdminPage/AdminPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import CheckOutPage from "../pages/CheckOutPage/CheckOutPage";
+import PaidPage from "../pages/PaidPage/PaidPage";
 
 export const routes = [
     {
@@ -57,6 +58,12 @@ export const routes = [
         page: CheckOutPage,
         isShowHeader: true,
         isShowFooter: false
+    },
+    {
+        path: '/paid/:billId/:orderID',
+        page: PaidPage,
+        isShowHeader: true,
+        isShowFooter: true
     },
     {
         path: '/profile-user',
