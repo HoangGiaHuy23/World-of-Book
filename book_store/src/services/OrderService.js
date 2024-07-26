@@ -5,17 +5,17 @@ export const createOrder = async (data) => {
     return res.data
 }
 
+export const updateOrder = async (orderID, data) => {
+    const res = await axios.put(`${process.env.REACT_APP_API_URL}/order/update/${orderID}`, data)
+    return res.data
+}
+
+export const getDetailOrder = async (orderID) => {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/order/get-order/${orderID}`)
+    return res.data
+}
+
 export const getAllOrder = async () => {
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/order/get-all`)
     return res.data
-    //orderItems, shippingAddress, paymentMethod, itemsPrice, shippingPrice, taxPrice, totalPrice, user, isPaid, paidAt
-    // shippingAddress: {
-    //     fullName: { type: String, required: true },
-    //     email: { type: String, required: true, unique: true },
-    //     phone: { type: Number, required: true },
-    //     city: { type: String, required: true },
-    //     district: { type: String, required: true },
-    //     wards: { type: String, required: true },
-    //     address: { type: String, required: true },
-    // },
 }
