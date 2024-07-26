@@ -225,6 +225,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           </Row>
           <Row style={{ paddingBottom: '15px', borderBottom: '1px solid #ccc' }}></Row>
           <Row style={{ fontSize: '1em', padding: '20px 0', lineHeight: '1.4em' }}>Mô tả</Row>
+          <Row style={{fontSize: '1.05em'}} dangerouslySetInnerHTML={{ __html: productDetails?.description }}></Row>
         </Col>
       </Row>
     </Loading>
