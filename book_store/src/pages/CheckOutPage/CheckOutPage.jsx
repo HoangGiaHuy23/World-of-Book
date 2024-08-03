@@ -13,7 +13,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import * as message from '../../components/Message/Message'
 import { removeOrderProduct } from '../../redux/slices/orderSlice'
 import * as ZalopayService from '../../services/ZalopayService'
-
+import * as VNPayService from '../../services/VNPayService'
 
 const CheckOutPage = () => {
     const navigate = useNavigate()
@@ -24,7 +24,7 @@ const CheckOutPage = () => {
     const [district, setDistrict] = useState([])
     const [ward, setWard] = useState([])
     const [checkWard, setCheckWard] = useState(false)
-    const [paymentMethod, setPaymentMethod] = useState(1);
+    const [paymentMethod, setPaymentMethod] = useState('COD');
     const [stateAddress, setStateAddress] = useState({
         fullName: '',
         email: '',
@@ -153,8 +153,11 @@ const CheckOutPage = () => {
     }
     const handleZalopay = async (data) => {
         const res = await ZalopayService.payment(data.totalPrice, data._id)
-        const bill_id = res.app_trans_id
         window.location.href = res.order_url
+    }
+    const handleVNPay = async (data) => {
+        const res = await VNPayService.payment(data.totalPrice, data._id)
+        window.location.href = res.redirectUrl
     }
     useEffect(() => {
         if (isSuccess && dataMutation?.status === 'OK') {
@@ -164,9 +167,18 @@ const CheckOutPage = () => {
                 const idProduct = item?.product
                 dispatch(removeOrderProduct({idProduct}))
             }
-        })
-        handleZalopay(dataMutation.data)
-        handleOK()
+          })
+            switch (paymentMethod) {
+                case 'ZaloPay':                    
+                    handleZalopay(dataMutation.data)
+                    break;
+                case 'VNPay': 
+                    handleVNPay(dataMutation.data)
+                    break;
+                default:                    
+                    handleOK()
+                    break;
+            }
         } else if (isError) {
           message.error()
         }
@@ -317,10 +329,9 @@ const CheckOutPage = () => {
             <WrapperDiv style={{ paddingBottom: '20px' }}>
                 <h3>PHƯƠNG THỨC THANH TOÁN</h3>
                 <Radio.Group onChange={onChange} value={paymentMethod} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <Radio value={1} label='ZaloPay'>ZaloPay</Radio>-
-                    <Radio value={2} label='VNPay'>VNPay</Radio>
-                    <Radio value={3} label='ShoppePay'>ShoppePay</Radio>
-                    <Radio value={4} label='Thanh toán khi nhận hàng'>Thanh toán khi nhận hàng</Radio>
+                    <Radio value='ZaloPay' label='ZaloPay'>ZaloPay</Radio>-
+                    <Radio value='VNPay' label='VNPay'>VNPay</Radio>
+                    <Radio value='COD' label='Thanh toán khi nhận hàng'>Thanh toán khi nhận hàng</Radio>
                 </Radio.Group>
             </WrapperDiv>
             <WrapperDiv style={{ paddingBottom: '20px', marginBottom: '120px' }}>
