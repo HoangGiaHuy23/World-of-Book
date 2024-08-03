@@ -6,7 +6,8 @@ const qs = require('qs')
 const express = require("express");
 const router = express.Router()
 const Order = require('../models/OrderProduct');
-const { isCancel } = require('axios');
+const dotenv = require('dotenv');
+dotenv.config()
 
 // APP INFO
 const config = {
@@ -19,6 +20,7 @@ const config = {
 router.post('/payment', async (req, res) => {
     const orderID = req.query.orderID
     const bill = req.query.bill
+    const method = 'Zalo'
     const items = [{}];
     const transID = Math.floor(Math.random() * 1000000);
     const app_trans_id = `${moment().format('YYMMDD')}_${transID}` // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
@@ -29,12 +31,12 @@ router.post('/payment', async (req, res) => {
         app_time: Date.now(), // miliseconds
         item: JSON.stringify(items),
         embed_data: JSON.stringify({
-            redirecturl : `http://localhost:3000/paid/${app_trans_id}/${orderID}` 
+            redirecturl : `http://localhost:3000/paid/${app_trans_id}/${orderID}/${method}` 
         }),
         amount: bill,
         description: `WoB - Payment for the order #${transID}`,
         bank_code: "",
-        callback_url: `https://4bba-42-117-163-21.ngrok-free.app/api/zalopay/callback?orderID=${orderID}`
+        callback_url: `${process.env.NGROK_URL}/api/zalopay/callback?orderID=${orderID}`
         
     };
 
