@@ -6,7 +6,7 @@ import { WrapperDiv } from './style'
 import Loading from '../../components/LoadingComponent/Loading';
 
 const PaidPage = () => {
-    const { billId, orderID } = useParams();
+    const { billId, orderID, method } = useParams();
     const [orderStatus, setOrderStatus] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const updateOrder = async () => {
@@ -25,14 +25,25 @@ const PaidPage = () => {
         return order_status
     }
     useEffect(() => {
-        const fetchOrderStatus = async () => {
-            const status = await updateOrder();
-            setOrderStatus(status);
+        if (method === 'Zalo') {
+            const fetchOrderStatus = async () => {
+                const status = await updateOrder();
+                setOrderStatus(status);
+                setIsLoading(false)
+            };
+            fetchOrderStatus();
+        }
+        if (method === 'VNPay') {
+            if (billId === '0') {
+                setOrderStatus(true);
+            }
+            else {
+                setOrderStatus(false);
+            }
             setIsLoading(false)
-        };
-        fetchOrderStatus();
+        }
     }, [billId, orderID]);
-    console.log('orderStatus', orderStatus)
+    
     return (
         <Loading isLoading={isLoading}>
             <WrapperDiv style={{display : isLoading ? 'none' : 'block'}}>
